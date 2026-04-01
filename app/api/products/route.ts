@@ -9,8 +9,10 @@ export async function GET() {
     await client.connect();
     
     const db = client.db("thesis_database");
+    const { enrichWithVendors } = await import('../../lib/aggregator');
     // This fetches EVERY part from your collection
-    const products = await db.collection("pc_parts").find({}).toArray();
+    const rawProducts = await db.collection("pc_parts").find({}).toArray();
+    const products = rawProducts.map(enrichWithVendors);
     
     await client.close();
     

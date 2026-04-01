@@ -13,15 +13,28 @@ export async function POST(req: Request) {
     await client.connect();
     const db = client.db("thesis_database");
 
-    // 3. Create the Order Document
+    // 3. Decrement stock for each purchased item
+    for (const item of items) {
+      await db.collection("pc_parts").updateOne(
+        { name: item.name },
+        { $inc: { stock: -1 } }
+      );
+    }
+
+    const { getServerSession } = require("next-auth/next");
+    const { authOptions } = require("../auth/[...nextauth]/route");
+    const session = await getServerSession(authOptions);
+
+    // 4. Create the Order Document
     const newOrder = {
       items: items,
       totalAmount: total,
       status: "Pending Processing",
       orderDate: new Date().toISOString(),
+      userId: session?.user?.email || null, // Map directly to email so we can find it easily
     };
 
-    // 4. Save it to a brand new "orders" collection!
+    // 5. Save it to the "orders" collection
     const result = await db.collection("orders").insertOne(newOrder);
     await client.close();
 
