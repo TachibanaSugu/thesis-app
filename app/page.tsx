@@ -89,6 +89,8 @@ export default function Home() {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<'gcash' | 'maya' | null>(null);
   const [simulatingPayment, setSimulatingPayment] = useState(false);
+  const [selectedVendor, setSelectedVendor] = useState("All");
+  const [isSyncing, setIsSyncing] = useState(false);
 
   // Sync state cleanly with localStorage on mount so /profile can access them natively
   useEffect(() => {
@@ -176,6 +178,9 @@ export default function Home() {
     if (activeCategory !== "All") {
       result = result.filter(p => p.category === activeCategory);
     }
+    if (selectedVendor !== "All") {
+      result = result.filter(p => p.vendor === selectedVendor);
+    }
     if (searchQuery.trim() !== "") {
       result = result.filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase()));
     }
@@ -184,7 +189,7 @@ export default function Home() {
     else if (sortBy === "price-high") result = [...result].sort((a, b) => b.price - a.price);
     else if (sortBy === "name") result = [...result].sort((a, b) => a.name.localeCompare(b.name));
     setFilteredProducts(result);
-  }, [searchQuery, activeCategory, products, sortBy]);
+  }, [searchQuery, activeCategory, products, sortBy, selectedVendor]);
 
   const addToCart = (product: any) => {
     // 🛡️ Strict Compatibility Engine
@@ -565,7 +570,34 @@ export default function Home() {
       <main id="marketplace" className="max-w-7xl mx-auto px-6 py-12">
         <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div>
-            <h2 className="text-4xl font-black mb-4 text-white">Marketplace</h2>
+            <div className="flex items-center gap-3 mb-6">
+              <h2 className="text-4xl font-black text-white">Marketplace</h2>
+              <div className="h-0.5 flex-1 bg-slate-800 ml-4 hidden md:block"></div>
+            </div>
+
+            {/* 🏷️ VENDOR TABS */}
+            <div className="flex gap-1 bg-slate-900 border border-slate-800 p-1.5 rounded-2xl mb-8 w-fit max-w-full overflow-x-auto scrollbar-hide">
+              {["All", "Shopee", "Lazada", "DynaQuest"].map((v) => (
+                <button
+                  key={v}
+                  onClick={() => {
+                    if (v === selectedVendor) return;
+                    setIsSyncing(true);
+                    setSelectedVendor(v);
+                    setTimeout(() => setIsSyncing(false), 1200);
+                  }}
+                  className={`px-5 py-2.5 rounded-xl text-xs font-black transition-all flex items-center gap-2 whitespace-nowrap ${
+                    selectedVendor === v 
+                      ? "bg-slate-800 text-white shadow-lg border border-slate-700" 
+                      : "text-slate-500 hover:text-slate-300 hover:bg-slate-800/50"
+                  }`}
+                >
+                  {v === "All" ? "🏢 Global" : v === "Shopee" ? "🟠 Shopee" : v === "Lazada" ? "🔵 Lazada" : "🟢 DynaQuest"}
+                  {selectedVendor === v && <div className="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-pulse"></div>}
+                </button>
+              ))}
+            </div>
+
             <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
               {["All", "CPU", "GPU", "Motherboard", "RAM", "Storage", "PSU", "Case"].map((cat) => (
                 <button 
@@ -605,7 +637,24 @@ export default function Home() {
           </div>
         </div>
 
-        {productsLoading ? (
+        {/* ⚡ SYNCING OVERLAY */}
+        <div className="relative">
+          <AnimatePresence>
+            {isSyncing && (
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm z-[20] rounded-3xl flex flex-col items-center justify-center p-10 text-center"
+              >
+                <div className="w-16 h-16 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin mb-6"></div>
+                <h3 className="text-2xl font-black text-white mb-2">⚡ CONNECTING TO {selectedVendor.toUpperCase()} HUB</h3>
+                <p className="text-slate-400 max-w-xs mx-auto text-sm animate-pulse">Fetching live inventory, price matching across nodes, and verifying stock status...</p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {productsLoading ? (
           /* SKELETON LOADER */
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {Array.from({ length: 8 }).map((_, idx) => (
@@ -619,8 +668,16 @@ export default function Home() {
             ))}
           </div>
         ) : filteredProducts.length === 0 ? (
-          <div className="text-center py-20">
-            <p className="text-slate-500 text-xl font-bold">No components found matching your search.</p>
+          <div className="text-center py-24 bg-slate-900/30 rounded-3xl border border-dashed border-slate-800">
+            <div className="text-6xl mb-6 opacity-20">🔍</div>
+            <h3 className="text-xl font-black text-slate-300 mb-2">{t.noComponents}</h3>
+            <p className="text-sm text-slate-500 mb-6">No matching parts found for {selectedVendor} in the {activeCategory} category.</p>
+            <button 
+              onClick={() => { setActiveCategory("All"); setSelectedVendor("All"); setSearchQuery(""); }}
+              className="px-8 py-3 bg-slate-800 hover:bg-cyan-500 hover:text-white text-slate-300 rounded-xl font-bold transition-all border border-slate-700 hover:border-cyan-500"
+            >
+              Reset All Filters
+            </button>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -688,7 +745,8 @@ export default function Home() {
             })}
           </div>
         )}
-      </main>
+      </div>
+    </main>
 
       {/* SHOPPING CART SIDEBAR */}
       <AnimatePresence>

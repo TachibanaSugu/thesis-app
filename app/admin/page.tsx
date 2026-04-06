@@ -423,6 +423,20 @@ export default function AdminDashboard() {
                   className="bg-slate-950 border border-slate-700 text-white px-4 py-2.5 rounded-xl text-sm focus:outline-none focus:border-cyan-500 transition-all w-48"
                 />
                 <button
+                  onClick={async () => {
+                    const res = await fetch("/api/admin/sync", { method: "POST" });
+                    if (res.ok) {
+                      addToast("Global Scraper Sync Complete!", "success");
+                      const prodRes = await fetch("/api/admin/products");
+                      setProducts(await prodRes.json());
+                    }
+                  }}
+                  className="bg-slate-800 hover:bg-cyan-500 text-white px-6 py-2.5 rounded-xl font-bold text-sm transition-all border border-slate-700 hover:border-cyan-500 flex items-center gap-2"
+                >
+                  <svg className="w-4 h-4 animate-pulse text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                  Trigger Scraper
+                </button>
+                <button
                   onClick={openAddForm}
                   className="bg-emerald-500 hover:bg-emerald-400 text-white px-6 py-2.5 rounded-xl font-black text-sm transition-colors shadow-[0_0_15px_rgba(16,185,129,0.3)] whitespace-nowrap"
                 >
