@@ -2,6 +2,8 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useToast } from "./components/Toast";
+import { getDetailedSpecs } from "./lib/aggregator";
+import { SupportBot } from "./components/SupportBot";
 
 const getImageForCategory = (category: string) => {
   const images: Record<string, string> = {
@@ -1286,31 +1288,17 @@ export default function Home() {
 
                 <div className="mb-8 flex-1">
                   <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Technical Specifications</h3>
-                  <div className="space-y-3">
-                    <div className="flex justify-between py-2 border-b border-slate-800/50">
-                      <span className="text-slate-400 text-sm">Manufacturer</span>
-                      <span className="text-white text-sm font-bold">{selectedProduct.name.split(' ')[0]}</span>
-                    </div>
-                    <div className="flex justify-between py-2 border-b border-slate-800/50">
-                      <span className="text-slate-400 text-sm">Performance Tier</span>
-                      <span className="text-cyan-400 text-sm font-bold">Enthusiast</span>
-                    </div>
-                    {selectedProduct.category === 'CPU' && (
-                      <div className="flex justify-between py-2 border-b border-slate-800/50">
-                        <span className="text-slate-400 text-sm">Architecture</span>
-                        <span className="text-white text-sm font-bold">{selectedProduct.name.toLowerCase().includes('amd') ? 'Zen 4' : 'Raptor Lake'}</span>
+                  <div className="grid grid-cols-1 gap-3">
+                    {getDetailedSpecs(selectedProduct.name, selectedProduct.category).map((spec: any, si: number) => (
+                      <div key={si} className="flex justify-between py-2.5 border-b border-slate-800/50 group/spec">
+                        <span className="text-slate-500 text-[11px] font-bold uppercase tracking-wider group-hover/spec:text-slate-300 transition-colors">{spec.label}</span>
+                        <span className="text-white text-sm font-black group-hover/spec:text-cyan-400 transition-colors">{spec.value}</span>
                       </div>
-                    )}
-                    {selectedProduct.category === 'Motherboard' && (
-                      <div className="flex justify-between py-2 border-b border-slate-800/50">
-                        <span className="text-slate-400 text-sm">Socket Support</span>
-                        <span className="text-white text-sm font-bold">{selectedProduct.name.toLowerCase().includes('z790') ? 'LGA 1700' : 'AM5'}</span>
-                      </div>
-                    )}
-                    <div className="flex justify-between py-2 border-b border-slate-800/50">
-                      <span className="text-slate-400 text-sm">Stock Availability</span>
-                      <span className={`text-sm font-bold ${selectedProduct.stock > 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                        {selectedProduct.stock > 0 ? `${selectedProduct.stock} Units` : 'Out of Stock'}
+                    ))}
+                    <div className="flex justify-between py-2.5 border-b border-slate-800/50">
+                      <span className="text-slate-500 text-[11px] font-bold uppercase tracking-wider">Status</span>
+                      <span className={`text-sm font-black ${selectedProduct.stock > 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                        {selectedProduct.stock > 0 ? 'In Stock' : 'Out of Stock'}
                       </span>
                     </div>
                   </div>
@@ -1472,6 +1460,7 @@ export default function Home() {
           </div>
         )}
       </AnimatePresence>
+      <SupportBot />
 
       {/* 💾 SAVE BUILD MODAL */}
       {showSaveModal && (

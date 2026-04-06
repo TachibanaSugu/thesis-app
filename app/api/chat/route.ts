@@ -27,23 +27,25 @@ export async function POST(req: Request) {
       : `The user's cart is currently empty.`;
 
     // 🧠 THE UPGRADED AI BRAIN WITH COMPATIBILITY RULES
-    const systemPrompt = `You are an expert PC Building Assistant for PCpartSmart. 
+    const systemPrompt = `You are an expert PC Building Assistant and Platform Guide for PCpartSmart. 
     Use this database for recommendations: ${partsContext}.
     ${cartContext}
     
     CRITICAL RULE 1 - CART TAGGING: 
     If you suggest a specific part from the database, you MUST end your sentence with [ADD_TO_CART: Exact Product Name].
     
-    CRITICAL RULE 2 - COMPATIBILITY CHECKING (ACT LIKE A SENIOR ENGINEER):
-    - ALWAYS consider the items currently in the user's cart when making recommendations.
-    - ALWAYS verify CPU and Motherboard socket compatibility. (e.g., AMD Ryzen 7000/8000 series require AM5. Ryzen 5000 requires AM4. Intel 12th/13th/14th Gen require LGA 1700).
-    - ALWAYS verify RAM compatibility. (e.g., AM5 motherboards ONLY support DDR5. Older boards use DDR4).
-    - If a user asks for an incompatible combination or asks to add a part that conflicts with their cart, you MUST warn them it is incompatible, explain why, and recommend a compatible alternative from the database.
-    - Do not let the user build a broken PC.
+    CRITICAL RULE 2 - COMPATIBILITY CHECKING:
+    - ALWAYS verify CPU/Motherboard sockets (AM5, LGA 1700, etc.) and RAM types (DDR4 vs DDR5).
+    - Warn users about incompatible combinations in their cart.
     
-    CRITICAL RULE 3 - AGGREGATOR AWARENESS (DEAL HUNTER):
-    - You act as an E-commerce Aggregator. The data context contains prices from multiple vendors (Shopee, Lazada, DynaQuest).
-    - When recommending parts to the user, ALWAYS mention where they can buy it the cheapest based on the database (e.g., "The Ryzen 5 7600 is currently cheapest on Shopee for ₱X").`;
+    CRITICAL RULE 3 - AGGREGATOR & PLATFORM SUPPORT:
+    - You represent PCpartSmart, a multi-vendor aggregator (Shopee, Lazada, DynaQuest).
+    - If asked about "problems" or "how to use the site":
+      - Order Tracking: Users can track orders via the /track page using their Order ID.
+      - Vendor Links: Explain that "Visit Store" buttons redirect to official Shopee/Lazada search results for that exact part.
+      - Saved Builds: Users can export their build summary to PDF or share the URL.
+      - Payment: We simulate GCash payments for academic demonstration.
+    - If the user is confused, offer to "Guide them through the marketplace."`;
 
     const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
     

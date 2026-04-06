@@ -59,3 +59,53 @@ export function enrichWithVendors(product: any) {
     startingPrice
   };
 }
+
+export function getDetailedSpecs(productName: string, category: string) {
+  const name = productName.toLowerCase();
+  
+  if (category === "CPU") {
+    const isAMD = name.includes("amd") || name.includes("ryzen");
+    return [
+      { label: "Architecture", value: isAMD ? "Zen 4" : "Raptor Lake Refresh" },
+      { label: "Cores / Threads", value: name.includes("9") ? "16 / 32" : name.includes("7") ? "8 / 16" : "6 / 12" },
+      { label: "Base Clock", value: name.includes("9") ? "4.2 GHz" : "3.7 GHz" },
+      { label: "Socket", value: isAMD ? "AM5" : "LGA 1700" },
+      { label: "TDP", value: name.includes("9") ? "170W" : "65W" }
+    ];
+  }
+  
+  if (category === "GPU") {
+    return [
+      { label: "VRAM Memory", value: name.includes("4070") ? "12GB GDDR6X" : name.includes("4060") ? "8GB GDDR6" : "16GB GDDR6" },
+      { label: "Base Clock", value: "1830 MHz" },
+      { label: "Interface", value: "PCIe 4.0 x16" },
+      { label: "Recommended PSU", value: name.includes("4070") ? "650W" : "550W" },
+      { label: "Ray Tracing", value: "3rd Gen Cores" }
+    ];
+  }
+
+  if (category === "RAM") {
+    return [
+      { label: "Type", value: name.includes("ddr5") ? "DDR5" : "DDR4" },
+      { label: "Speed", value: name.includes("ddr5") ? "6000 MHz" : "3200 MHz" },
+      { label: "Latency", value: "CL30 / CL16" },
+      { label: "Voltage", value: "1.35V" }
+    ];
+  }
+
+  if (category === "Storage") {
+    return [
+      { label: "Form Factor", value: "M.2 2280" },
+      { label: "Interface", value: "NVMe PCIe 4.0 x4" },
+      { label: "Read Speed", value: name.includes("990") ? "7450 MB/s" : "3500 MB/s" },
+      { label: "Write Speed", value: name.includes("990") ? "6900 MB/s" : "2100 MB/s" }
+    ];
+  }
+
+  return [
+    { label: "Manufacturer", value: productName.split(' ')[0] },
+    { label: "Category", value: category },
+    { label: "Condition", value: "Brand New" },
+    { label: "Warranty", value: "1 Year Local" }
+  ];
+}
