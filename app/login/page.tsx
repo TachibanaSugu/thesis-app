@@ -45,7 +45,7 @@ export default function LoginPage() {
           // Auto login after sign up
           const signInRes = await signIn("credentials", { email, password, redirect: false });
           if (signInRes?.ok) {
-            window.location.href = email === "admin@techbuildz.ai" ? "/admin" : "/profile";
+            window.location.href = email === "admin@PCpartSmart" ? "/admin" : "/profile";
           }
         }
       } catch (err) {
@@ -66,7 +66,7 @@ export default function LoginPage() {
       if (res?.error) {
         setError(res.error || "Access Denied. Incorrect credentials.");
       } else if (res?.ok) {
-        window.location.href = email === "admin@techbuildz.ai" ? "/admin" : "/profile";
+        window.location.href = email === "admin@PCpartSmart" ? "/admin" : "/profile";
       }
     }
     setLoading(false);
@@ -80,8 +80,7 @@ export default function LoginPage() {
       <div className="relative w-full max-w-md">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-black tracking-tighter italic">
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-500">TECHBUILDZ</span>
-            <span className="text-white">.AI</span>
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-500">PCpartSmart</span>
           </h1>
           <p className="text-slate-500 mt-2 text-sm font-bold uppercase tracking-widest">Authentication</p>
         </div>
@@ -108,7 +107,7 @@ export default function LoginPage() {
               {isSignUp ? "Create an Account" : "Welcome Back"}
             </h2>
             <p className="text-slate-400 text-sm">
-              {isSignUp ? "Join TechBuildz.AI today" : "Enter your email and password to continue"}
+              {isSignUp ? "Join PCpartSmart today" : "Enter your email and password to continue"}
             </p>
           </div>
 

@@ -33,7 +33,7 @@ export async function POST(req: Request) {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     // Default role for new signups is "customer", unless it's the exact admin email (just as a failsafe, but admin should be seeded manually or updated via db)
-    const role = email === 'admin@techbuildz.ai' ? 'admin' : 'customer';
+    const role = email === 'admin@pcpartsmart.com' ? 'admin' : 'customer';
 
     const result = await usersCollection.insertOne({
       name,

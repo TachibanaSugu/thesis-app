@@ -36,7 +36,7 @@ export default function NotFound() {
 
         <div className="mt-12">
           <p className="text-xs font-bold text-slate-600">
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-500">TECHBUILDZ</span>.AI
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-500">PCpartSmart</span>
           </p>
         </div>
       </div>

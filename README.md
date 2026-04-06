@@ -1,11 +1,11 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/TachibanaSugu/thesis-app/master/public/favicon.ico" alt="TechBuildz.AI Logo" width="120" />
+  <img src="https://raw.githubusercontent.com/TachibanaSugu/thesis-app/master/public/favicon.ico" alt="PCpartSmart Logo" width="120" />
 </div>
 
-# ⚡ TECHBUILDZ.AI 
+# ⚡ PCpartSmart 
 ### Agentic PC Building & Hardware Engineering Suite
 
-**TECHBUILDZ.AI** is a comprehensive, production-grade e-commerce aggregator and hardware engineering suite developed as a Capstone/Thesis Project. It aims to solve the intense barrier of entry in PC building by utilizing cutting-edge Agentic AI to recommend, validate, and simulate complex hardware interactions.
+**PCpartSmart** is a comprehensive, production-grade e-commerce aggregator and hardware engineering suite developed as a Capstone/Thesis Project. It aims to solve the intense barrier of entry in PC building by utilizing cutting-edge Agentic AI to recommend, validate, and simulate complex hardware interactions.
 
 ---
 
@@ -33,7 +33,7 @@ A specialized Gemini Flash-powered agent that takes natural language (e.g., "Bui
 - **PDF Export Engine**: Synthesizes the active complex build into an exportable, highly-formatted offline tracking document.
 
 ### 🔐 Secure Multi-Role Architecture (CMS)
-Features a deeply integrated Admin Dashboard exclusively accessible via `admin@techbuildz.ai`. It bypasses static rendering to securely load real-world inventory mapping, order status manipulation (Processing to Delivered), and graphical revenue analytics.
+Features a deeply integrated Admin Dashboard exclusively accessible via `admin@pcpartsmart.com`. It bypasses static rendering to securely load real-world inventory mapping, order status manipulation (Processing to Delivered), and graphical revenue analytics.
 
 ---
 

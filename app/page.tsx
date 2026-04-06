@@ -76,7 +76,7 @@ export default function Home() {
   const [theme, setTheme] = useState<'dark' | 'cyberpunk'>('dark');
   const [lang, setLang] = useState<'en' | 'fil'>('en');
   const [notifications, setNotifications] = useState<any[]>([
-    { id: 1, text: 'Welcome to TechBuildz.AI!', type: 'info', time: new Date().toISOString(), read: false },
+    { id: 1, text: 'Welcome to PCpartSmart!', type: 'info', time: new Date().toISOString(), read: false },
     { id: 2, text: 'New RTX 4090 stock available on Shopee', type: 'deal', time: new Date().toISOString(), read: false },
     { id: 3, text: 'Price drop detected on AMD Ryzen 7 7800X3D', type: 'alert', time: new Date().toISOString(), read: false },
   ]);
@@ -422,7 +422,7 @@ export default function Home() {
       <header className="border-b border-slate-800/60 bg-slate-950/50 backdrop-blur-md sticky top-0 z-40 px-6 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <h1 className="text-2xl font-black tracking-tighter italic flex items-center gap-4">
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-500">TECHBUILDZ</span>.AI
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-500">PCpartSmart</span>
             {sessionUser?.role === 'admin' && (
               <a href="/admin" className="text-[10px] bg-slate-800 text-slate-400 px-2 py-1 rounded hover:bg-slate-700 hover:text-white transition-colors">Admin</a>
             )}
@@ -931,7 +931,7 @@ export default function Home() {
                   <button
                     onClick={() => {
                       const now = new Date().toLocaleString('en-PH', { dateStyle: 'full', timeStyle: 'short' });
-                      let doc = `╔══════════════════════════════════════╗\n║    TECHBUILDZ.AI  BUILD SUMMARY      ║\n╚══════════════════════════════════════╝\n\nGenerated: ${now}\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n COMPONENTS\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+                      let doc = `╔══════════════════════════════════════╗\n║    PCpartSmart  BUILD SUMMARY      ║\n╚══════════════════════════════════════╝\n\nGenerated: ${now}\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n COMPONENTS\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
                       cart.forEach((item: any, i: number) => {
                         doc += `\n ${i + 1}. [${item.category}]  ${item.name}\n    Price: ₱${item.price.toLocaleString()}    Qty: ${item.qty || 1}\n    Wattage: ${item.wattage || 'N/A'}W\n`;
                       });
@@ -940,12 +940,12 @@ export default function Home() {
                       doc += `\n  PSU Capacity:      ${hasPSU ? psuCapacity + 'W' : 'Not Selected'}`;
                       doc += `\n  Power Status:      ${isPowerDangerous ? '⚠️  DANGEROUS - Upgrade PSU!' : hasPSU ? '✅ Safe' : 'ℹ️  Add a PSU'}`;
                       if (fpsEstimate) doc += `\n\n  Gaming Performance: ${fpsEstimate}`;
-                      doc += `\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n  TOTAL: ₱${cartTotal.toLocaleString()}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n  Powered by TechBuildz.AI\n  https://techbuildz.ai\n`;
+                      doc += `\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n  TOTAL: ₱${cartTotal.toLocaleString()}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n  Powered by PCpartSmart\n  https://PCpartSmart\n`;
                       const blob = new Blob([doc], { type: 'text/plain' });
                       const url = URL.createObjectURL(blob);
                       const a = document.createElement('a');
                       a.href = url;
-                      a.download = `TechBuildz_Build_Summary_${new Date().toISOString().split('T')[0]}.txt`;
+                      a.download = `PCpartSmart_Build_Summary_${new Date().toISOString().split('T')[0]}.txt`;
                       a.click();
                       URL.revokeObjectURL(url);
                       addToast("Build summary downloaded!", "success");
@@ -1042,7 +1042,7 @@ export default function Home() {
                 <svg className="w-8 h-8 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
               </div>
               <h2 className="text-3xl font-black text-white">Payment Successful</h2>
-              <p className="text-slate-400 text-sm mt-2">Thank you for shopping with TechBuildz.AI</p>
+              <p className="text-slate-400 text-sm mt-2">Thank you for shopping with PCpartSmart</p>
             </div>
 
             <div className="bg-slate-950 p-6 rounded-xl border border-slate-800 mb-6">
@@ -1082,7 +1082,7 @@ export default function Home() {
                   const printContent = document.getElementById('receipt-print');
                   if (printContent) {
                     const win = window.open('', '_blank');
-                    win?.document.write(`<html><head><title>TECHBUILDZ.AI Receipt</title><style>body{font-family:system-ui;padding:40px;max-width:500px;margin:auto}h1{font-size:24px;margin-bottom:20px}table{width:100%;border-collapse:collapse}td{padding:8px 4px;border-bottom:1px solid #eee}td:last-child{text-align:right;font-weight:bold}.total{font-size:20px;font-weight:bold;margin-top:16px;text-align:right}.header{text-align:center;margin-bottom:24px}.meta{color:#666;font-size:12px}</style></head><body><div class='header'><h1>TECHBUILDZ.AI</h1><p class='meta'>Order Receipt</p></div><p class='meta'>Order ID: ${receipt.orderId}</p><p class='meta'>Date: ${receipt.date}</p><br/><table>${receipt.items.map((item: any) => `<tr><td>${item.name}</td><td>₱${item.price.toLocaleString()}</td></tr>`).join('')}</table><p class='total'>Total: ₱${receipt.total.toLocaleString()}</p><br/><p style='text-align:center;color:#999;font-size:11px'>Thank you for shopping with TECHBUILDZ.AI</p></body></html>`);
+                    win?.document.write(`<html><head><title>PCpartSmart Receipt</title><style>body{font-family:system-ui;padding:40px;max-width:500px;margin:auto}h1{font-size:24px;margin-bottom:20px}table{width:100%;border-collapse:collapse}td{padding:8px 4px;border-bottom:1px solid #eee}td:last-child{text-align:right;font-weight:bold}.total{font-size:20px;font-weight:bold;margin-top:16px;text-align:right}.header{text-align:center;margin-bottom:24px}.meta{color:#666;font-size:12px}</style></head><body><div class='header'><h1>PCpartSmart</h1><p class='meta'>Order Receipt</p></div><p class='meta'>Order ID: ${receipt.orderId}</p><p class='meta'>Date: ${receipt.date}</p><br/><table>${receipt.items.map((item: any) => `<tr><td>${item.name}</td><td>₱${item.price.toLocaleString()}</td></tr>`).join('')}</table><p class='total'>Total: ₱${receipt.total.toLocaleString()}</p><br/><p style='text-align:center;color:#999;font-size:11px'>Thank you for shopping with PCpartSmart</p></body></html>`);
                     win?.document.close();
                     win?.print();
                   }
@@ -1137,8 +1137,7 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             <div>
               <h3 className="text-xl font-black tracking-tighter italic mb-3">
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-500">TECHBUILDZ</span>
-                <span className="text-white">.AI</span>
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-500">PCpartSmart</span>
               </h3>
               <p className="text-slate-500 text-sm leading-relaxed">
                 AI-powered PC component marketplace with smart compatibility checking and build recommendations.
@@ -1169,7 +1168,7 @@ export default function Home() {
           </div>
           <div className="border-t border-slate-800 mt-10 pt-6 text-center">
             <p className="text-slate-600 text-xs font-bold">
-              &copy; {new Date().getFullYear()} TECHBUILDZ.AI — Thesis Project. All rights reserved.
+              &copy; {new Date().getFullYear()} PCpartSmart — Thesis Project. All rights reserved.
             </p>
           </div>
         </div>
@@ -1511,7 +1510,7 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
             <div>
               <h3 className="text-xl font-black tracking-tighter italic mb-4">
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-500">TECHBUILDZ</span>.AI
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-500">PCpartSmart</span>
               </h3>
               <p className="text-sm text-slate-400 leading-relaxed mb-4">{lang === 'en' ? 'The Philippines\' #1 AI-powered PC building platform. Compare prices across multiple vendors and build your dream setup.' : 'Ang #1 AI-powered PC building platform sa Pilipinas. Ikumpara ang mga presyo sa iba\'t ibang tindahan at buuin ang pangarap mong setup.'}</p>
               <div className="flex gap-3">
@@ -1552,7 +1551,7 @@ export default function Home() {
             </div>
           </div>
           <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-xs text-slate-600 font-bold">&copy; {new Date().getFullYear()} TechBuildz.AI — Capstone Project. All rights reserved.</p>
+            <p className="text-xs text-slate-600 font-bold">&copy; {new Date().getFullYear()} PCpartSmart — Capstone Project. All rights reserved.</p>
             <p className="text-xs text-slate-700 font-medium">Built with ❤️ for Academic Excellence</p>
           </div>
         </div>

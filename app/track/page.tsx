@@ -37,7 +37,7 @@ export default function TrackOrder() {
     win.document.write(`
       <html>
         <head>
-          <title>TECHBUILDZ.AI - Invoice ${order._id}</title>
+          <title>PCpartSmart - Invoice ${order._id}</title>
           <style>
             body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 40px; color: #1e293b; line-height: 1.5; }
             .header { border-bottom: 2px solid #e2e8f0; padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: flex-end; }
@@ -61,7 +61,7 @@ export default function TrackOrder() {
         </head>
         <body>
           <div class="header">
-            <div class="logo"><span>TECHBUILDZ</span>.AI</div>
+            <div class="logo"><span>PCpartSmart</span></div>
             <h1 class="invoice-title">INVOICE</h1>
           </div>
           
@@ -102,8 +102,8 @@ export default function TrackOrder() {
           </table>
 
           <div class="footer">
-            <p>Thank you for shopping with TECHBUILDZ.AI!</p>
-            <p>If you have any questions concerning this invoice, contact support@techbuildz.ai.</p>
+            <p>Thank you for shopping with PCpartSmart!</p>
+            <p>If you have any questions concerning this invoice, contact support@pcpartsmart.com.</p>
           </div>
           <script>window.print();</script>
         </body>
@@ -123,7 +123,7 @@ export default function TrackOrder() {
       <header className="border-b border-slate-800/60 bg-slate-950/50 backdrop-blur-md sticky top-0 z-40 px-6 py-4">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <a href="/" className="text-2xl font-black tracking-tighter italic">
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-500">TECHBUILDZ</span>.AI
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-500">PCpartSmart</span>
           </a>
           <a href="/" className="bg-slate-800 hover:bg-slate-700 px-5 py-2 rounded-lg text-sm font-bold transition-colors text-white">
             ← Back to Store

@@ -310,7 +310,7 @@ export default function AdminDashboard() {
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement("a");
                     a.href = url;
-                    a.download = `techbuildz_orders_${new Date().toISOString().split('T')[0]}.csv`;
+                    a.download = `PCpartSmart_orders_${new Date().toISOString().split('T')[0]}.csv`;
                     a.click();
                     URL.revokeObjectURL(url);
                     addToast("Orders exported to CSV!", "success");

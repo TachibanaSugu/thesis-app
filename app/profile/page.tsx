@@ -34,7 +34,7 @@ export default async function ProfilePage() {
       <header className="border-b border-slate-800/60 bg-slate-950/50 backdrop-blur-md sticky top-0 z-40 px-6 py-4">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <Link href="/" className="text-2xl font-black tracking-tighter italic">
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-500">TECHBUILDZ</span>.AI
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-500">PCpartSmart</span>
           </Link>
           <div className="flex items-center gap-4">
             <Link href="/" className="text-sm font-bold text-slate-400 hover:text-white transition-colors">Store</Link>

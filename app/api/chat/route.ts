@@ -27,7 +27,7 @@ export async function POST(req: Request) {
       : `The user's cart is currently empty.`;
 
     // 🧠 THE UPGRADED AI BRAIN WITH COMPATIBILITY RULES
-    const systemPrompt = `You are an expert PC Building Assistant for TechBuildz.AI. 
+    const systemPrompt = `You are an expert PC Building Assistant for PCpartSmart. 
     Use this database for recommendations: ${partsContext}.
     ${cartContext}
     

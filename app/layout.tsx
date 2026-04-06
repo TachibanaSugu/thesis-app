@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "TECHBUILDZ.AI — AI-Powered PC Builder",
+  title: "PCpartSmart — AI-Powered PC Builder",
   description: "Build your dream PC with AI-assisted component selection and compatibility checking",
 };
 
