@@ -1359,20 +1359,32 @@ export default function Home() {
                                  {isDiscounted && <p className="text-xs text-slate-500 line-through">₱{vendor.originalPrice.toLocaleString()}</p>}
                                  <p className="text-xl font-black text-white">₱{vendor.price.toLocaleString()}</p>
                               </div>
-                              <button 
-                                onClick={() => {
-                                  addToCart({ 
-                                    ...selectedProduct, 
-                                    name: `${selectedProduct.name} [via ${vendor.name}]`, 
-                                    price: vendor.price 
-                                  });
-                                  setSelectedProduct(null);
-                                }}
-                                disabled={vendor.stock <= 0}
-                                className="bg-slate-800 hover:bg-cyan-500 hover:text-white px-5 py-2.5 rounded-lg text-sm font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed border border-slate-700 hover:border-cyan-500 whitespace-nowrap"
-                              >
-                                {vendor.stock <= 0 ? 'Out of Stock' : 'Add to Cart'}
-                              </button>
+                              <div className="flex gap-2">
+                                <a 
+                                  href={vendor.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="bg-slate-900 hover:bg-slate-800 text-slate-300 px-4 py-2.5 rounded-lg text-sm font-bold transition-all border border-slate-800 hover:border-slate-700 flex items-center justify-center gap-2"
+                                  title={`Visit ${vendor.name}`}
+                                >
+                                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                                  <span className="hidden lg:inline">Visit Store</span>
+                                </a>
+                                <button 
+                                  onClick={() => {
+                                    addToCart({ 
+                                      ...selectedProduct, 
+                                      name: `${selectedProduct.name} [via ${vendor.name}]`, 
+                                      price: vendor.price 
+                                    });
+                                    setSelectedProduct(null);
+                                  }}
+                                  disabled={vendor.stock <= 0}
+                                  className="bg-slate-800 hover:bg-cyan-500 hover:text-white px-5 py-2.5 rounded-lg text-sm font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed border border-slate-700 hover:border-cyan-500 whitespace-nowrap"
+                                >
+                                  {vendor.stock <= 0 ? 'Out of Stock' : 'Add to Cart'}
+                                </button>
+                              </div>
                             </div>
                           </div>
                         )

@@ -20,7 +20,8 @@ export function enrichWithVendors(product: any) {
       stock: Math.max(0, dbStock - (h % 5)),
       badgeColor: "bg-orange-500/10 text-orange-500 border-orange-500/30",
       iconColor: "text-orange-500",
-      official: h % 2 === 0
+      official: h % 2 === 0,
+      url: `https://shopee.ph/search?keyword=${encodeURIComponent(product.name)}`
     },
     {
       id: "lazada",
@@ -30,7 +31,8 @@ export function enrichWithVendors(product: any) {
       stock: Math.max(0, dbStock + (h % 3) - 2),
       badgeColor: "bg-blue-600/10 text-blue-400 border-blue-600/30",
       iconColor: "text-blue-500",
-      official: h % 3 === 0
+      official: h % 3 === 0,
+      url: `https://www.lazada.com.ph/catalog/?q=${encodeURIComponent(product.name)}`
     },
     {
        id: "dynaquest",
@@ -40,7 +42,8 @@ export function enrichWithVendors(product: any) {
        stock: dbStock,
        badgeColor: "bg-emerald-600/10 text-emerald-400 border-emerald-600/30",
        iconColor: "text-emerald-500",
-       official: true
+       official: true,
+       url: `https://dynaquestpc.com/search?q=${encodeURIComponent(product.name)}`
     }
   ];
 
