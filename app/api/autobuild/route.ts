@@ -39,16 +39,48 @@ export async function POST(req: Request) {
     ["AMD Ryzen 5 7600X", "MSI MAG B650 Tomahawk WiFi (AM5)", "ZOTAC Twin Edge RTX 4060 8GB", "Kingston Fury Beast 16GB (2x8GB) DDR5-5200"]
     `;
 
-    const model = genAI.getGenerativeModel({ 
-      model: "gemini-2.0-flash",
-      generationConfig: { responseMimeType: "application/json" }
-    });
-    
-    const result = await model.generateContent(`${systemPrompt}\nUser target: ${type}`);
-    const selectedNames = JSON.parse(result.response.text());
-    
+    let selectedNames: string[] = [];
+
+    if (process.env.USE_OLLAMA === 'true') {
+      const ollamaHost = process.env.OLLAMA_HOST || "http://localhost:11434";
+      const ollamaModel = process.env.OLLAMA_MODEL || "gemma:2b";
+      
+      const response = await fetch(`${ollamaHost}/api/chat`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: ollamaModel,
+          messages: [{ role: "user", content: `${systemPrompt}\nUser target: ${type}` }],
+          stream: false,
+          format: "json"
+        }),
+      });
+
+      if (!response.ok) throw new Error("Ollama connection failed");
+      const data = await response.json();
+      const content = data.message.content;
+      
+      // Robust JSON extraction for smaller models
+      try {
+        const match = content.match(/\[[\s\S]*\]/);
+        selectedNames = JSON.parse(match ? match[0] : content);
+      } catch (pe) {
+        console.error("JSON Parse Error on Ollama output:", content);
+        throw pe;
+      }
+    } else {
+      const model = genAI.getGenerativeModel({ 
+        model: "gemini-2.0-flash",
+        generationConfig: { responseMimeType: "application/json" }
+      });
+      const result = await model.generateContent(`${systemPrompt}\nUser target: ${type}`);
+      selectedNames = JSON.parse(result.response.text());
+    }
+
     // Filter database for matched parts & enrich them for frontend logic
-    const matchedParts = rawParts.filter(p => selectedNames.includes(p.name)).map(enrichWithVendors);
+    const matchedParts = rawParts.filter(p => {
+      return selectedNames.some(name => p.name.includes(name) || name.includes(p.name));
+    }).map(enrichWithVendors);
     
     return NextResponse.json({ build: matchedParts });
   } catch(error) {

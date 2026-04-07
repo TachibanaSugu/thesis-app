@@ -112,7 +112,7 @@ export default function Home() {
     hero: 'Build Your Dream', heroSub: 'PC with AI', heroDesc: 'Get expert component recommendations, real-time compatibility checking, and smart build suggestions — all powered by artificial intelligence.',
     marketplace: 'Marketplace', searchPlaceholder: 'Search components...', cart: 'CART', checkout: 'CHECKOUT NOW',
     totalAmount: 'Total Amount', powerDraw: 'Power Draw', perfSim: 'Performance Simulator', buildChecklist: 'Build Checklist',
-    exportBuild: 'Export Build Summary', talkAI: 'Talk to AI Builder', trackOrder: 'Track Order', costBreakdown: 'Cost Breakdown',
+    exportBuild: 'Export Build Summary', trackOrder: 'Track Order', costBreakdown: 'Cost Breakdown',
     saveBuild: 'Save This Build', compareBuilds: 'Compare Builds', notifications: 'Notifications', markAllRead: 'Mark all read',
     startingAt: 'Starting at', addToCart: 'Add to Cart', outOfStock: 'Out of Stock', compareAndBuy: 'Compare & Buy (Aggregator Views)',
     noComponents: 'No components found matching your search.', all: 'All', savedBuilds: 'Saved Builds',
@@ -533,16 +533,8 @@ export default function Home() {
           <p className="text-slate-400 text-lg max-w-2xl mb-8 leading-relaxed">
             {t.heroDesc}
           </p>
-          <div className="flex flex-col md:flex-row gap-4 mb-4">
-            <button 
-              onClick={() => setIsOpen(true)}
-              className="bg-slate-800 text-white px-8 py-4 rounded-xl font-bold text-sm hover:scale-105 hover:bg-slate-700 transition-all border border-slate-700 shadow-xl"
-            >
-              {t.talkAI}
-            </button>
-          </div>
-          <p className="text-xs text-slate-500 font-bold uppercase tracking-widest mt-4 animate-pulse">
-             Powered by Google Gemini 2.0 Agentic APIs
+          <p className="text-xs text-slate-500 font-bold uppercase tracking-widest mt-4">
+             Powered by Local Ollama & Gemini Agentic APIs
           </p>
         </div>
       </section>
