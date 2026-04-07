@@ -47,24 +47,62 @@ export async function POST(req: Request) {
       - Payment: We simulate GCash payments for academic demonstration.
     - If the user is confused, offer to "Guide them through the marketplace."`;
 
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
-    
-    const chatHistory = history.map((msg: any) => ({
-      role: msg.role === "user" ? "user" : "model",
-      parts: [{ text: msg.text }],
-    }));
+    // 🤖 CHOOSE AI ENGINE: GEMINI VS OLLAMA
+    let text = "";
 
-    const chat = model.startChat({
-      history: [
-        { role: "user", parts: [{ text: systemPrompt }] },
-        { role: "model", parts: [{ text: "Understood. I will enforce PC building compatibility rules and use the ADD_TO_CART tag." }] },
-        ...chatHistory
-      ],
-    });
+    if (process.env.USE_OLLAMA === "true") {
+      try {
+        const ollamaHost = process.env.OLLAMA_HOST || "http://localhost:11434";
+        const ollamaModel = process.env.OLLAMA_MODEL || "gemma:2b";
 
-    const result = await chat.sendMessage(message);
-    const response = await result.response;
-    const text = response.text();
+        const ollamaHistory = [
+          { role: "system", content: systemPrompt },
+          ...history.map((msg: any) => ({
+            role: msg.role === "user" ? "user" : "assistant",
+            content: msg.text,
+          })),
+          { role: "user", content: message }
+        ];
+
+        const ollamaResponse = await fetch(`${ollamaHost}/api/chat`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            model: ollamaModel,
+            messages: ollamaHistory,
+            stream: false
+          }),
+        });
+
+        if (!ollamaResponse.ok) throw new Error("Ollama connection failed");
+        const data = await ollamaResponse.json();
+        text = data.message.content;
+      } catch (ollamaErr) {
+        console.error("Ollama Offline or Error:", ollamaErr);
+        return NextResponse.json({ 
+          text: "⚠️ **Ollama is Offline.** Please make sure Ollama is running on your computer and you have the `gemma:2b` model installed (`ollama run gemma:2b`)." 
+        });
+      }
+    } else {
+      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+      
+      const chatHistory = history.map((msg: any) => ({
+        role: msg.role === "user" ? "user" : "model",
+        parts: [{ text: msg.text }],
+      }));
+
+      const chat = model.startChat({
+        history: [
+          { role: "user", parts: [{ text: systemPrompt }] },
+          { role: "model", parts: [{ text: "Understood. I will enforce PC building compatibility rules and use the ADD_TO_CART tag." }] },
+          ...chatHistory
+        ],
+      });
+
+      const result = await chat.sendMessage(message);
+      const response = await result.response;
+      text = response.text();
+    }
 
     return NextResponse.json({ text });
 
