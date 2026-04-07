@@ -102,6 +102,36 @@ export function getDetailedSpecs(productName: string, category: string) {
     ];
   }
 
+  if (category === "Motherboard") {
+    return [
+      { label: "Chipset", value: name.includes("z790") ? "Intel Z790" : name.includes("b650") ? "AMD B650" : "H610" },
+      { label: "Socket", value: name.includes("z790") ? "LGA 1700" : "AM5" },
+      { label: "Form Factor", value: "ATX" },
+      { label: "Max Memory", value: "128GB DDR5" },
+      { label: "PCIe Gen", value: "PCIe 5.0 Support" }
+    ];
+  }
+
+  if (category === "PSU") {
+    return [
+      { label: "Wattage", value: name.includes("850") ? "850W" : "750W" },
+      { label: "Efficiency", value: "80+ Gold Certified" },
+      { label: "Modular", value: "Fully Modular" },
+      { label: "Protection", value: "OVP/UVP/SCP/OPP" },
+      { label: "Fan Type", value: "120mm FDB" }
+    ];
+  }
+
+  if (category === "Case") {
+    return [
+      { label: "Type", value: "ATX Mid Tower" },
+      { label: "Side Panel", value: "Tempered Glass" },
+      { label: "Max GPU Length", value: "360mm" },
+      { label: "Pre-installed Fans", value: "3x 120mm ARGB" },
+      { label: "I/O Ports", value: "USB-C, 2x USB 3.0" }
+    ];
+  }
+
   return [
     { label: "Manufacturer", value: productName.split(' ')[0] },
     { label: "Category", value: category },

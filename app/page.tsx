@@ -1460,7 +1460,7 @@ export default function Home() {
           </div>
         )}
       </AnimatePresence>
-      <SupportBot />
+      <SupportBot theme={theme} />
 
       {/* 💾 SAVE BUILD MODAL */}
       {showSaveModal && (

@@ -2,7 +2,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-export function SupportBot() {
+export function SupportBot({ theme = 'dark' }: { theme?: 'dark' | 'cyberpunk' }) {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<{ role: string; text: string }[]>([
     { role: "model", text: "👋 Hello! I'm your PCpartSmart Assistant. How can I help you navigate our platform today?" }
@@ -54,7 +54,11 @@ export function SupportBot() {
             className="absolute bottom-20 right-0 w-80 md:w-96 h-[500px] bg-slate-900 border border-slate-700 rounded-3xl shadow-2xl overflow-hidden flex flex-col backdrop-blur-xl"
           >
             {/* Header */}
-            <div className="p-5 bg-gradient-to-r from-cyan-600 to-purple-600 flex items-center justify-between">
+            <div className={`p-5 flex items-center justify-between ${
+              theme === 'cyberpunk' 
+                ? 'bg-gradient-to-r from-yellow-400 to-pink-500' 
+                : 'bg-gradient-to-r from-cyan-600 to-purple-600'
+            }`}>
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-md">
                   <span className="text-xl">🤖</span>
@@ -88,6 +92,27 @@ export function SupportBot() {
               {loading && <div className="text-cyan-500 font-bold text-[10px] animate-pulse uppercase tracking-widest ml-2">Assistant is typing...</div>}
             </div>
 
+            {/* Quick Actions */}
+            {!loading && messages.length === 1 && (
+              <div className="px-4 pb-4 flex flex-wrap gap-2">
+                {[
+                  "🔍 How do I use the site?",
+                  "📦 Track my order",
+                  "🛒 Where are the stores?",
+                  "💳 Is GCash payment real?"
+                ].map((action, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => { setInput(action.split(' ').slice(1).join(' ')); }}
+                    className="bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px] font-bold px-3 py-1.5 rounded-full border border-slate-700 transition-colors"
+                  >
+                    {action}
+                  </button>
+                ))}
+              </div>
+            )}
+
             {/* Input */}
             <div className="p-4 bg-slate-950 border-t border-slate-800">
               <div className="relative">
@@ -106,7 +131,9 @@ export function SupportBot() {
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
                 </button>
               </div>
-              <p className="text-[9px] text-slate-600 text-center mt-3 font-bold uppercase tracking-widest">Powered by Gemini 2.0 Flash</p>
+              <p className="text-[9px] text-slate-600 text-center mt-3 font-bold uppercase tracking-widest">
+                {process.env.NEXT_PUBLIC_USE_OLLAMA === 'true' ? 'Powered by Local Gemma 2B' : 'Powered by Gemini 2.0 Flash'}
+              </p>
             </div>
           </motion.div>
         )}
@@ -116,7 +143,11 @@ export function SupportBot() {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="w-16 h-16 bg-gradient-to-tr from-cyan-500 to-purple-600 rounded-full shadow-[0_0_30px_rgba(6,182,212,0.4)] flex items-center justify-center border-2 border-white/20 transition-all relative group"
+        className={`w-16 h-16 rounded-full flex items-center justify-center border-2 border-white/20 transition-all relative group shadow-2xl ${
+          theme === 'cyberpunk'
+            ? 'bg-gradient-to-tr from-yellow-400 to-pink-500 shadow-pink-500/40'
+            : 'bg-gradient-to-tr from-cyan-500 to-purple-600 shadow-cyan-500/40'
+        }`}
       >
         <span className="text-3xl group-hover:rotate-12 transition-transform">🤖</span>
         <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full border-2 border-slate-950 flex items-center justify-center text-[10px] font-black text-white animate-bounce">1</div>
