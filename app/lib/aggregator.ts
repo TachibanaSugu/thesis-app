@@ -53,10 +53,25 @@ export function enrichWithVendors(product: any) {
     ? Math.min(...activeVendors.map(v => v.price))
     : basePrice;
 
+  // Add Best Price flag
+  const sortedVendors = vendors.sort((a,b) => a.price - b.price).map((v, i) => ({
+    ...v,
+    isBestPrice: i === 0 && v.stock > 0
+  }));
+
+  // Simulate Stock Trend Predictor
+  const trendTypes = ["dropped", "increased", "stable"];
+  const trend = trendTypes[h % 3];
+  const percentage = (h % 15) + 2; // 2% to 16%
+  const stockTrend = trend === "stable" 
+      ? "Prices have been stable over the last 30 days."
+      : `Prices have ${trend} ${percentage}% this week. ${trend === "dropped" ? "Great time to buy!" : "Consider waiting."}`;
+
   return {
     ...product,
-    vendors: vendors.sort((a,b) => a.price - b.price), // Cheapest first
-    startingPrice
+    vendors: sortedVendors,
+    startingPrice,
+    stockTrend
   };
 }
 

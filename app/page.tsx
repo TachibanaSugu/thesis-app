@@ -70,6 +70,19 @@ export default function Home() {
   const [sortBy, setSortBy] = useState("default");
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
+  const [sentiment, setSentiment] = useState<string|null>(null);
+  const [buildReport, setBuildReport] = useState<any>(null);
+
+  useEffect(() => {
+    if (selectedProduct) {
+       setSentiment(null);
+       fetch('/api/sentiment', {
+         method: 'POST', headers: {'Content-Type': 'application/json'},
+         body: JSON.stringify({ reviews: getFakeReviews(selectedProduct.name), productName: selectedProduct.name })
+       }).then(res => res.json()).then(data => setSentiment(data.summary)).catch(() => {});
+    }
+  }, [selectedProduct]);
+
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { addToast } = useToast();
@@ -397,7 +410,7 @@ export default function Home() {
   const [isBuilding, setIsBuilding] = useState(false);
   const handleAutoBuild = async (type: string) => {
     setIsBuilding(true);
-    addToast(`Building ${type} rig in the cloud...`, "info");
+    addToast(`Constructing Agentic ${type} rig...`, "info");
     try {
       const res = await fetch("/api/autobuild", {
         method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ type })
@@ -409,8 +422,12 @@ export default function Home() {
            return { ...p, qty: 1, name: `${p.name} [via ${vendor.name}]`, price: vendor.price };
         }));
         setIsOpen(false);
-        setIsCartOpen(true);
-        addToast("Rig constructed successfully!", "success");
+        if (data.justification) {
+           setBuildReport(data.justification);
+        } else {
+           setIsCartOpen(true);
+        }
+        addToast("Agentic construction successful!", "success");
       } else {
         addToast("Automated construction failed.", "error");
       }
@@ -1340,13 +1357,30 @@ export default function Home() {
                             <path d={pathD} fill="none" stroke={isDown ? '#10b981' : '#ef4444'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                             <circle cx={(29/29)*w} cy={h - ((currentPrice - minP) / (maxP - minP)) * h} r="3" fill={isDown ? '#10b981' : '#ef4444'} />
                           </svg>
-                          <div className="flex justify-between mt-2">
-                            <span className="text-[9px] text-slate-600 font-bold">30 days ago</span>
-                            <span className="text-[9px] text-slate-600 font-bold">Today</span>
+                          <div className="mt-3 p-2 bg-slate-900 rounded text-center text-xs text-slate-300 font-bold border border-slate-800">
+                             🤖 AI Stock Predictor: {selectedProduct.stockTrend || "Analyzing market signals..."}
                           </div>
                         </>
                       );
                     })()}
+                  </div>
+                </div>
+
+                {/* 🤖 SENTIMENT ANALYSIS PANEL */}
+                <div className="mb-6 border-t border-slate-800 pt-6">
+                  <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4 flex items-center justify-between">
+                     <span>AI Review Sentiment</span>
+                     <span className="bg-cyan-500/10 text-cyan-400 px-2 py-0.5 rounded text-[9px] border border-cyan-500/30">AGENTIC API</span>
+                  </h3>
+                  <div className="bg-slate-950 p-4 rounded-xl border border-cyan-900/50 relative overflow-hidden group">
+                     {sentiment ? (
+                       <p className="text-sm font-bold text-slate-200">"{sentiment}"</p>
+                     ) : (
+                       <div className="flex items-center gap-2 text-slate-400 animate-pulse text-sm">
+                         <div className="w-4 h-4 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin"></div>
+                         Reading reviews...
+                       </div>
+                     )}
                   </div>
                 </div>
 
@@ -1382,12 +1416,17 @@ export default function Home() {
                               <span className={`px-2.5 py-1 rounded text-[10px] font-black uppercase tracking-widest border ${vendor.badgeColor}`}>
                                 {vendor.name}
                               </span>
+                              {vendor.isBestPrice && (
+                                <span className="bg-amber-500/10 text-amber-500 px-2.5 py-1 rounded text-[10px] font-black tracking-widest border border-amber-500/50 shadow-[0_0_10px_rgba(245,158,11,0.2)]">
+                                  BEST PRICE
+                                </span>
+                              )}
                               {vendor.official && (
                                 <span className="bg-emerald-500/10 text-emerald-400 p-1 rounded-full border border-emerald-500/30" title="Official Store Verified">
                                   <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" /></svg>
                                 </span>
                               )}
-                              {isDiscounted && vendor.stock > 0 && (
+                              {isDiscounted && vendor.stock > 0 && !vendor.isBestPrice && (
                                 <span className="bg-red-500/10 text-red-500 px-2 py-0.5 rounded text-[10px] font-bold border border-red-500/30 animate-pulse">SALE</span>
                               )}
                             </div>
@@ -1622,6 +1661,97 @@ export default function Home() {
            }
         `}} />
       )}
+
+      {/* 🤖 ARCHITECT BUILD REPORT MODAL */}
+      <AnimatePresence>
+        {buildReport && (
+          <div className="fixed inset-0 z-[80] flex items-center justify-center p-4 md:p-10">
+            <div className="absolute inset-0 bg-black/90 backdrop-blur-lg" onClick={() => setBuildReport(null)}></div>
+            <motion.div 
+               initial={{ opacity: 0, scale: 0.9, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.9, y: 20 }}
+               className="relative bg-slate-900 border-2 border-cyan-500/50 w-full max-w-3xl rounded-3xl shadow-[0_0_50px_rgba(6,182,212,0.15)] overflow-hidden flex flex-col max-h-[90vh]"
+            >
+              <div className="p-8 border-b border-slate-800 bg-slate-950 flex justify-between items-center">
+                <div>
+                  <h2 className="text-2xl font-black text-white flex items-center gap-3">
+                    <span className="text-cyan-400">🤖</span> The Architect Report
+                  </h2>
+                  <p className="text-sm text-slate-400 mt-1">Deep analysis of your generated Agentic PC Build.</p>
+                </div>
+                <button onClick={() => setBuildReport(null)} className="w-10 h-10 bg-slate-800 hover:bg-red-500 text-white rounded-full flex items-center justify-center transition-colors">
+                  &times;
+                </button>
+              </div>
+
+              <div className="p-8 overflow-y-auto space-y-8">
+                {/* Budget Allocation */}
+                <div>
+                   <h3 className="text-sm font-bold text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-2">💰 Budget Strategy</h3>
+                   <div className="bg-slate-950 p-5 rounded-xl border border-slate-800">
+                     <p className="text-slate-300 text-sm leading-relaxed">{buildReport.budgetAllocation}</p>
+                   </div>
+                </div>
+
+                {/* Bottleneck Visaul */}
+                <div>
+                   <h3 className="text-sm font-bold text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-2">⚖️ Workload Balance (Bottleneck Check)</h3>
+                   <div className="bg-slate-950 p-6 rounded-xl border border-slate-800">
+                     <p className="text-slate-300 text-sm mb-6">{buildReport.bottleneckVisual?.explanation}</p>
+                     
+                     <div className="space-y-4">
+                       <div>
+                         <div className="flex justify-between text-xs font-bold mb-1">
+                           <span className="text-blue-400">Predicted CPU Utilization</span>
+                           <span className="text-blue-400">{buildReport.bottleneckVisual?.cpuUtil || 0}%</span>
+                         </div>
+                         <div className="w-full bg-slate-800 rounded-full h-2">
+                           <div className="bg-blue-500 h-2 rounded-full" style={{ width: `${buildReport.bottleneckVisual?.cpuUtil || 0}%` }}></div>
+                         </div>
+                       </div>
+                       <div>
+                         <div className="flex justify-between text-xs font-bold mb-1">
+                           <span className="text-emerald-400">Predicted GPU Utilization</span>
+                           <span className="text-emerald-400">{buildReport.bottleneckVisual?.gpuUtil || 0}%</span>
+                         </div>
+                         <div className="w-full bg-slate-800 rounded-full h-2">
+                           <div className="bg-emerald-500 h-2 rounded-full" style={{ width: `${buildReport.bottleneckVisual?.gpuUtil || 0}%` }}></div>
+                         </div>
+                       </div>
+                     </div>
+                   </div>
+                </div>
+
+                {/* Future Proofing */}
+                <div>
+                   <h3 className="text-sm font-bold text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-2">🔮 Longevity & Upgrades</h3>
+                   <div className="bg-slate-950 p-5 rounded-xl border border-slate-800">
+                     <p className="text-slate-300 text-sm leading-relaxed">{buildReport.futureProofing}</p>
+                   </div>
+                </div>
+
+                {/* Safety Warning */}
+                {buildReport.safetyWarning && String(buildReport.safetyWarning).toLowerCase() !== "null" && (
+                  <div>
+                    <h3 className="text-sm font-bold text-red-400 uppercase tracking-widest mb-3 flex items-center gap-2">⚠️ Safety & Clearance Heuristics</h3>
+                    <div className="bg-red-500/10 p-5 rounded-xl border border-red-500/30">
+                      <p className="text-red-400 text-sm font-bold leading-relaxed">{buildReport.safetyWarning}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className="p-6 border-t border-slate-800 bg-slate-950 flex justify-end gap-4">
+                <button 
+                  onClick={() => { setBuildReport(null); setIsCartOpen(true); }}
+                  className="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black px-6 py-3 rounded-xl transition-colors shadow-[0_0_20px_rgba(6,182,212,0.3)]"
+                >
+                  Proceed to Cart
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
     </div>
   );
